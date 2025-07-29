@@ -10,7 +10,10 @@ export const mockUsers: User[] = [
     verified: true,
     followers: 12500,
     following: 890,
-    joinDate: new Date('2022-01-15')
+    joinDate: new Date('2022-01-15'),
+    email: 'john@example.com',
+    mfaEnabled: false,
+    backupMethods: []
   },
   {
     id: '2',
@@ -21,7 +24,10 @@ export const mockUsers: User[] = [
     verified: false,
     followers: 8900,
     following: 1200,
-    joinDate: new Date('2021-08-22')
+    joinDate: new Date('2021-08-22'),
+    email: 'sarah@example.com',
+    mfaEnabled: true,
+    backupMethods: ['totp', 'recovery']
   },
   {
     id: '3',
@@ -32,7 +38,10 @@ export const mockUsers: User[] = [
     verified: true,
     followers: 15600,
     following: 650,
-    joinDate: new Date('2020-11-10')
+    joinDate: new Date('2020-11-10'),
+    email: 'alex@example.com',
+    mfaEnabled: true,
+    backupMethods: ['totp', 'sms', 'recovery']
   }
 ];
 

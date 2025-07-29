@@ -8,6 +8,54 @@ export interface User {
   followers: number;
   following: number;
   joinDate: Date;
+  email: string;
+  mfaEnabled: boolean;
+  totpSecret?: string;
+  phoneNumber?: string;
+  recoveryCodes?: string[];
+  backupMethods: ('totp' | 'sms' | 'recovery')[];
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  username: string;
+  displayName: string;
+  avatar: string;
+  mfaEnabled: boolean;
+  mfaSetupRequired: boolean;
+  backupMethods: ('totp' | 'sms' | 'recovery')[];
+}
+
+export interface MFASetup {
+  secret: string;
+  qrCodeUrl: string;
+  backupCodes: string[];
+}
+
+export interface AuthState {
+  user: AuthUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  mfaRequired: boolean;
+  mfaSetupRequired: boolean;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignUpCredentials {
+  email: string;
+  password: string;
+  username: string;
+  displayName: string;
+}
+
+export interface MFAVerification {
+  code: string;
+  method: 'totp' | 'sms' | 'recovery';
 }
 
 export interface MediaItem {
