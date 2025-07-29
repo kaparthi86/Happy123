@@ -3,6 +3,7 @@
 import { TrendingUp, Users, Hash, Plus, Verified } from 'lucide-react'
 import { mockUsers } from '@/data/mockData'
 import { formatNumber } from '@/lib/utils'
+import AITrendingSidebar from './AITrendingSidebar'
 
 const trendingTopics = [
   { tag: 'NextJS', posts: 15400 },
@@ -17,7 +18,10 @@ const suggestedUsers = mockUsers.slice(1)
 export default function Sidebar() {
   return (
     <aside className="w-full lg:w-80 space-y-6 order-first lg:order-last">
-      {/* Trending Topics */}
+      {/* AI Trending Topics */}
+      <AITrendingSidebar />
+      
+      {/* Traditional Trending Topics */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex items-center space-x-2 mb-4">
           <TrendingUp className="w-5 h-5 text-blue-600" />

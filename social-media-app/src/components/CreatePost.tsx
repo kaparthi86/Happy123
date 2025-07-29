@@ -1,9 +1,12 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Image, Video, Smile, MapPin, Calendar, X } from 'lucide-react'
+import { Image, Video, Smile, MapPin, Calendar, X, Sparkles, Brain } from 'lucide-react'
 import { currentUser } from '@/data/mockData'
 import { handleFileUpload, isImageFile, isVideoFile, validateFileSize } from '@/lib/utils'
+import AIContentSuggestions from './AIContentSuggestions'
+import ContentAnalysisPanel from './ContentAnalysisPanel'
+import { AIContentSuggestion } from '@/types'
 
 interface MediaPreview {
   id: string
@@ -16,6 +19,8 @@ export default function CreatePost() {
   const [content, setContent] = useState('')
   const [mediaFiles, setMediaFiles] = useState<MediaPreview[]>([])
   const [isExpanded, setIsExpanded] = useState(false)
+  const [showAISuggestions, setShowAISuggestions] = useState(false)
+  const [showAnalysisPanel, setShowAnalysisPanel] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const videoInputRef = useRef<HTMLInputElement>(null)
 
@@ -62,6 +67,18 @@ export default function CreatePost() {
     setMediaFiles(prev => prev.filter(media => media.id !== id))
   }
 
+  const handleApplySuggestion = (suggestion: string, type: AIContentSuggestion['type']) => {
+    if (type === 'completion') {
+      setContent(prev => prev + suggestion)
+    } else if (type === 'enhancement') {
+      setContent(suggestion)
+    } else if (type === 'hashtag') {
+      setContent(prev => prev + ' ' + suggestion)
+    } else if (type === 'topic') {
+      setContent(prev => prev + ' ' + suggestion)
+    }
+  }
+
   const handleSubmit = () => {
     if (!content.trim() && mediaFiles.length === 0) {
       alert('Please add some content or media to your post.')
@@ -78,6 +95,7 @@ export default function CreatePost() {
     setContent('')
     setMediaFiles([])
     setIsExpanded(false)
+    setShowAISuggestions(false)
     
     alert('Post created successfully!')
   }
@@ -90,7 +108,7 @@ export default function CreatePost() {
           src={currentUser.avatar}
           alt={currentUser.displayName}
         />
-        <div className="flex-1">
+        <div className="flex-1 relative">
           <textarea
             className="w-full resize-none border-none outline-none text-lg placeholder-gray-500"
             placeholder="What's happening?"
@@ -99,6 +117,15 @@ export default function CreatePost() {
             onFocus={() => setIsExpanded(true)}
             rows={isExpanded ? 3 : 1}
           />
+
+          {/* AI Content Suggestions */}
+          {showAISuggestions && (
+            <AIContentSuggestions
+              content={content}
+              onApplySuggestion={handleApplySuggestion}
+              className="mt-2"
+            />
+          )}
 
           {/* Media Preview */}
           {mediaFiles.length > 0 && (
@@ -166,6 +193,19 @@ export default function CreatePost() {
                   onChange={(e) => handleFileSelect(e.target.files, 'video')}
                 />
 
+                {/* AI Suggestions Toggle */}
+                <button 
+                  onClick={() => setShowAISuggestions(!showAISuggestions)}
+                  className={`flex items-center space-x-2 px-3 py-2 text-sm rounded-lg transition-colors ${
+                    showAISuggestions 
+                      ? 'text-blue-600 bg-blue-50 hover:bg-blue-100' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>AI Assist</span>
+                </button>
+
                 {/* Other Options */}
                 <button className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
                   <Smile className="w-4 h-4" />
@@ -178,6 +218,13 @@ export default function CreatePost() {
                 <button className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
                   <Calendar className="w-4 h-4" />
                   <span>Schedule</span>
+                </button>
+                <button 
+                  onClick={() => setShowAnalysisPanel(true)}
+                  className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <Brain className="w-4 h-4" />
+                  <span>Analyze</span>
                 </button>
               </div>
 
@@ -200,6 +247,13 @@ export default function CreatePost() {
           )}
         </div>
       </div>
+
+      {/* Content Analysis Panel */}
+      <ContentAnalysisPanel
+        content={content}
+        isVisible={showAnalysisPanel}
+        onClose={() => setShowAnalysisPanel(false)}
+      />
     </div>
   )
 }

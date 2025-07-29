@@ -24,7 +24,14 @@
     "react-otp-input": "^3.1.1",
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^3.3.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "openai": "^4.70.1",
+    "compromise": "^14.14.0",
+    "sentiment": "^5.0.2",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-node": "^4.22.0",
+    "natural": "^8.0.1",
+    "axios": "^1.7.9"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
