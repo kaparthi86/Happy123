@@ -114,3 +114,67 @@ export interface NotificationItem {
   timestamp: Date;
   read: boolean;
 }
+
+// AGI Feature Types
+export interface AIContentSuggestion {
+  id: string;
+  type: 'completion' | 'enhancement' | 'hashtag' | 'topic';
+  suggestion: string;
+  confidence: number;
+  context?: string;
+}
+
+export interface ContentAnalysis {
+  sentiment: {
+    score: number; // -1 to 1
+    label: 'positive' | 'negative' | 'neutral';
+    confidence: number;
+  };
+  topics: string[];
+  entities: {
+    type: 'person' | 'organization' | 'location' | 'other';
+    text: string;
+    confidence: number;
+  }[];
+  toxicity: {
+    score: number; // 0 to 1
+    categories: string[];
+  };
+  factCheck?: {
+    claims: string[];
+    verificationStatus: 'verified' | 'disputed' | 'unverified';
+    sources?: string[];
+  };
+}
+
+export interface SmartNotification extends NotificationItem {
+  priority: 'high' | 'medium' | 'low';
+  aiReason: string;
+  predictedEngagement: number;
+}
+
+export interface TrendingTopic {
+  id: string;
+  topic: string;
+  volume: number;
+  sentiment: number;
+  predictedGrowth: number;
+  relatedHashtags: string[];
+  timeframe: '1h' | '6h' | '24h' | '7d';
+}
+
+export interface AITranslation {
+  originalText: string;
+  translatedText: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  confidence: number;
+}
+
+export interface ContentSummary {
+  originalLength: number;
+  summaryLength: number;
+  summary: string;
+  keyPoints: string[];
+  readingTime: number;
+}

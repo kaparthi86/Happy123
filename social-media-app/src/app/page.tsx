@@ -1,17 +1,35 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header'
 import CreatePost from '@/components/CreatePost'
-import PostCard from '@/components/PostCard'
+import AIEnhancedPostCard from '@/components/AIEnhancedPostCard'
 import Sidebar from '@/components/Sidebar'
 import CommentsModal from '@/components/CommentsModal'
 import { mockPosts } from '@/data/mockData'
+import aiService from '@/services/aiService'
 
 export default function Home() {
   const [posts, setPosts] = useState(mockPosts)
   const [selectedPost, setSelectedPost] = useState<typeof mockPosts[0] | null>(null)
   const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false)
+  const [rankedPosts, setRankedPosts] = useState(mockPosts)
+
+  useEffect(() => {
+    // Apply AI-powered feed ranking
+    const rankFeed = async () => {
+      try {
+        const userPreferences = { /* mock user preferences */ }
+        const ranked = await aiService.rankPosts(posts, userPreferences)
+        setRankedPosts(ranked)
+      } catch (error) {
+        console.error('Error ranking posts:', error)
+        setRankedPosts(posts)
+      }
+    }
+
+    rankFeed()
+  }, [posts])
 
   const handleLike = (postId: string) => {
     console.log('Liked post:', postId)
@@ -47,8 +65,8 @@ export default function Home() {
             <CreatePost />
             
             <div className="space-y-6">
-              {posts.map((post) => (
-                <PostCard
+              {rankedPosts.map((post) => (
+                <AIEnhancedPostCard
                   key={post.id}
                   post={post}
                   onLike={handleLike}
